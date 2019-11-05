@@ -13,7 +13,13 @@ resolvers += Resolver.bintrayRepo("kamon-io", "snapshots")
 //publishLocalConfiguration := publishLocalConfiguration.value.withOverwrite(true)
 //publishM2Configuration := publishM2Configuration.value.withOverwrite(true)
 
-publishTo := Some("Sonatype Snapshots Nexus" at "https://oss.sonatype.org/content/repositories/snapshots")
+publishTo <<= version { v: String =>
+  if (v.trim.endsWith("SNAPSHOT"))
+    Some("Sonatype Snapshots Nexus" at "https://oss.sonatype.org/content/repositories/snapshots")
+  else
+    Some("Sonatype Nexus" at "https://oss.sonatype.org/service/local/staging/deploy/maven2")
+}
+
 credentials += Credentials(new File("credentials.properties"))
 
 libraryDependencies ++= Seq(
