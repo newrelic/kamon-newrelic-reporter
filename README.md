@@ -58,7 +58,6 @@ kamon.newrelic {
 
     # Optional
     # https://docs.newrelic.com/docs/understand-dependencies/distributed-tracing/trace-api/report-new-relic-format-traces-trace-api
-    service-name = "Unknown"
 }
 ```
 

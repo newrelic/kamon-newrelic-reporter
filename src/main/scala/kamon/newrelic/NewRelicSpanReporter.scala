@@ -12,10 +12,7 @@ import org.slf4j.LoggerFactory
 import scala.jdk.CollectionConverters._
 
 class NewRelicSpanReporter(spanBatchSenderBuilder: SpanBatchSenderBuilder =
-                           new SimpleSpanBatchSenderBuilder("kamon.newrelic")) extends SpanReporter {
-
-  // TODO figure out how to handle exceptions when the optional config settings don't exist
-  //  com.typesafe.config.ConfigException$Missing: No configuration setting found for key 'service-name'
+                           new SimpleSpanBatchSenderBuilder()) extends SpanReporter {
 
   private val logger = LoggerFactory.getLogger(classOf[NewRelicSpanReporter])
   private var spanBatchSender = spanBatchSenderBuilder.build(Kamon.config())
@@ -24,7 +21,7 @@ class NewRelicSpanReporter(spanBatchSenderBuilder: SpanBatchSenderBuilder =
   private def buildCommonAttributes(config: Config) = {
     new Attributes()
       .put("instrumentation.source", "kamon-agent")
-      .put("service.name", config.getConfig("kamon.newrelic").getString("service-name"))
+      .put("service.name", config.getConfig("kamon.environment").getString("service"))
   }
 
   checkJoinParameter()
