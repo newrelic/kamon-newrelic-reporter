@@ -1,6 +1,6 @@
 organization := "com.newrelic.telemetry"
 name := "kamon-newrelic-reporter"
-version := "0.0.1"
+version := "0.0.1-SNAPSHOT"
 description := "New Relic Kamon Reporter"
 
 scalaVersion := "2.13.0"
