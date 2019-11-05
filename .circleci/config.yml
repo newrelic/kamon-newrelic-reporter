@@ -8,23 +8,23 @@ jobs:
     docker:
       # specify the version you desire here
       - image: circleci/openjdk:8-jdk
-      working_directory: ~/repo
+    working_directory: ~/repo
 
-      environment:
-        # Customize the JVM maximum heap limit
-        JVM_OPTS: -Xmx3200m
-        TERM: dumb
+    environment:
+      # Customize the JVM maximum heap limit
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
 
-      steps:
-        - checkout
+    steps:
+      - checkout
 
-        # Download and cache dependencies
-        - restore_cache:
-            keys:
-              - v1-dependencies-{{ checksum "build.sbt" }}
-              - v1-dependencies-
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "build.sbt" }}
+            - v1-dependencies-
 
-        - run: ./circleci-credentials.sh && sbt publish
+      - run: ./circleci-credentials.sh && sbt publish
   build:
     docker:
       # specify the version you desire here
