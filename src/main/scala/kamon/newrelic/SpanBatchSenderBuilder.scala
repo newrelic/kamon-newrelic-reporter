@@ -11,7 +11,7 @@ trait SpanBatchSenderBuilder {
   def build(config: Config): SpanBatchSender
 }
 
-class SimpleSpanBatchSenderBuilder(configPath: String) extends SpanBatchSenderBuilder {
+class SimpleSpanBatchSenderBuilder() extends SpanBatchSenderBuilder {
 
   private val logger = LoggerFactory.getLogger(classOf[SpanBatchSenderBuilder])
 
@@ -23,7 +23,7 @@ class SimpleSpanBatchSenderBuilder(configPath: String) extends SpanBatchSenderBu
    */
   override def build(config: Config) = {
     logger.warn("NewRelicSpanReporter buildReporter...")
-    val nrConfig = config.getConfig(configPath)
+    val nrConfig = config.getConfig("kamon.newrelic")
     // TODO maybe some validation around these values?
     val nrInsightsInsertKey = nrConfig.getString("nr-insights-insert-key")
 
