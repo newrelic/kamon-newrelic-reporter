@@ -62,8 +62,8 @@ workflows:
      jobs:
        - build
        - publish-snapshot:
-           requires:
-             - build
-#         - filters:
-#             branches:
-#               only: master
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
