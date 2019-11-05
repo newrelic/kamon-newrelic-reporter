@@ -1,7 +1,7 @@
-organization := "io.kamon"
-name := "kamon-newrelic"
-version := "0.1-SNAPSHOT"
-description := "New Relic Span Reporter"
+organization := "com.newrelic.telemetry"
+name := "kamon-newrelic-reporter"
+version := "0.0.1-SNAPSHOT"
+description := "New Relic Kamon Reporter"
 
 scalaVersion := "2.13.0"
 
@@ -12,6 +12,9 @@ resolvers += Resolver.bintrayRepo("kamon-io", "snapshots")
 //publishConfiguration := publishConfiguration.value.withOverwrite(true)
 //publishLocalConfiguration := publishLocalConfiguration.value.withOverwrite(true)
 //publishM2Configuration := publishM2Configuration.value.withOverwrite(true)
+
+publishTo := Some("Sonatype Snapshots Nexus" at "https://oss.sonatype.org/content/repositories/snapshots")
+credentials += Credentials(new File("credentials.properties"))
 
 libraryDependencies ++= Seq(
   "io.kamon" %% "kamon-core" % "2.0.1",
