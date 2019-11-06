@@ -16,6 +16,9 @@ jobs:
       TERM: dumb
 
     steps:
+      - run
+        - name: import GPG key
+            command: echo -e "$GPG_SIGNING_KEY" | gpg --import
       - checkout
 
       # Download and cache dependencies
@@ -58,6 +61,9 @@ jobs:
 
 workflows:
   version: 2
+  publish_testing:
+    jobs:
+      - publish
   build:
      jobs:
        - build
