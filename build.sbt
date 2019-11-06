@@ -13,7 +13,7 @@ resolvers += Resolver.bintrayRepo("kamon-io", "snapshots")
 //publishLocalConfiguration := publishLocalConfiguration.value.withOverwrite(true)
 //publishM2Configuration := publishM2Configuration.value.withOverwrite(true)
 //publishTo := Some("Sonatype Snapshots Nexus" at "https://oss.sonatype.org/content/repositories/snapshots")
-
+useGpg := true
 
 publishTo := {
   val nexus = "https://oss.sonatype.org/"
