@@ -16,8 +16,8 @@ jobs:
       TERM: dumb
 
     steps:
-      - run: ./write_secret_key.sh
       - checkout
+      - run: ./write_secret_key.sh
 
       # Download and cache dependencies
       - restore_cache:
