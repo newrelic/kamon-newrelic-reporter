@@ -16,7 +16,7 @@ jobs:
       TERM: dumb
 
     steps:
-      - run: echo -e "$GPG_SIGNING_KEY" | gpg --import
+      - run: echo "$GPG_SIGNING_KEY"
       - checkout
 
       # Download and cache dependencies
