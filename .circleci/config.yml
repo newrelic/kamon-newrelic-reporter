@@ -17,7 +17,7 @@ jobs:
 
     steps:
       - checkout
-      - run: ./write_secret_key.sh
+      - run: echo $GPG_SIGNING_KEY_BASE64 | base64 --decode | gpg --import
 
       # Download and cache dependencies
       - restore_cache:
