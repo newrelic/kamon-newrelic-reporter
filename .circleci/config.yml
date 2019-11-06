@@ -25,7 +25,7 @@ jobs:
             - v1-dependencies-{{ checksum "build.sbt" }}
             - v1-dependencies-
 
-      - run: ./circleci-credentials.sh && sbt publishSigned
+      - run: ./circleci-credentials.sh && sbt publish
   build:
     docker:
       # specify the version you desire here
