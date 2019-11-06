@@ -1,7 +1,7 @@
 #!/bin/bash
 
 cat <<EOF > secret_key.gpg
-$GPG_SECRET_KEY
+$GPG_SIGNING_KEY
 EOF
 
 echo "Created secreted key file: Here it is: "
