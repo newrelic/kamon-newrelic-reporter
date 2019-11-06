@@ -13,7 +13,7 @@ resolvers += Resolver.bintrayRepo("kamon-io", "snapshots")
 //publishLocalConfiguration := publishLocalConfiguration.value.withOverwrite(true)
 //publishM2Configuration := publishM2Configuration.value.withOverwrite(true)
 //publishTo := Some("Sonatype Snapshots Nexus" at "https://oss.sonatype.org/content/repositories/snapshots")
-useGpg := true
+//useGpg := true
 
 publishTo := {
   val nexus = "https://oss.sonatype.org/"
@@ -24,6 +24,12 @@ publishTo := {
 }
 
 credentials += Credentials(new File("credentials.properties"))
+credentials += Credentials(
+  "GnuPG Key ID",
+  "gpg",
+  "395D1F263AFE4F3C06BAAB646922760724F67BF8", // key identifier
+  "ignored" // this field is ignored; passwords are supplied by pinentry
+)
 
 libraryDependencies ++= Seq(
   "io.kamon" %% "kamon-core" % "2.0.1",
