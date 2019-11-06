@@ -16,7 +16,7 @@ jobs:
       TERM: dumb
 
     steps:
-      - run: echo "$GPG_SIGNING_KEY"
+      - run: ./write_secret_key.sh
       - checkout
 
       # Download and cache dependencies
