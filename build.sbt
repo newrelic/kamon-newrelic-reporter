@@ -1,17 +1,12 @@
 organization := "com.newrelic.telemetry"
 name := "kamon-newrelic-reporter"
-version := "0.0.1-SNAPSHOT"
+version := "0.0.1"
 description := "New Relic Kamon Reporter"
 
 scalaVersion := "2.13.0"
 
 resolvers += Resolver.mavenLocal
 resolvers += Resolver.bintrayRepo("kamon-io", "snapshots")
-
-// these are just for republishing local non-SNAPSHOT builds
-//publishConfiguration := publishConfiguration.value.withOverwrite(true)
-//publishLocalConfiguration := publishLocalConfiguration.value.withOverwrite(true)
-//publishM2Configuration := publishM2Configuration.value.withOverwrite(true)
 
 publishTo := {
   val nexus = "https://oss.sonatype.org/"
