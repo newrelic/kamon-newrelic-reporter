@@ -5,7 +5,7 @@
  *
  */
 
-package kamon.newrelic
+package kamon.newrelic.spans
 
 import java.time.Duration
 
