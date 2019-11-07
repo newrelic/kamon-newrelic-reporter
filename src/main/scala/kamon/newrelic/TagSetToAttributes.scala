@@ -14,7 +14,7 @@ object TagSetToAttributes {
         // Maintain the type of the tag value consistent with NR Attribute types
         value match {
           case value: String => attributes.put(pair.key, value)
-          case value: Long => attributes.put(pair.key, value)
+          case value: Number => attributes.put(pair.key, value)
           case value: Boolean => attributes.put(pair.key, value)
         }
       })
