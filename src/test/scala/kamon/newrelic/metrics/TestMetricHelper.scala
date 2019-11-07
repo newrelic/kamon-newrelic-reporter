@@ -19,8 +19,8 @@ object TestMetricHelper {
   def buildCounter = {
     val tagSet: TagSet = TagSet.from(Map("foo" -> "bar"))
     val settings = Metric.Settings.ForValueInstrument(MeasurementUnit.percentage, Duration.ofMillis(12))
-    val inst1 = new Instrument.Snapshot[Long](tagSet, value1)
-    val inst2 = new Instrument.Snapshot[Long](tagSet, value2)
-    MetricSnapshot.ofValues("flib", "flam", settings, Seq(inst1, inst2))
+    val instrument1 = new Instrument.Snapshot[Long](tagSet, value1)
+    val instrument2 = new Instrument.Snapshot[Long](tagSet, value2)
+    MetricSnapshot.ofValues("flib", "flam", settings, Seq(instrument1, instrument2))
   }
 }
