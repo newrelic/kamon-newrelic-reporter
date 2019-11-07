@@ -31,7 +31,6 @@ class NewRelicMetricsReporter(sender: MetricBatchSender = NewRelicMetricsReporte
     }
 
     val metrics = Seq(counters).flatten.asJava
-    val commonAttributes = new Attributes()
     val batch = new MetricBatch(metrics, commonAttributes)
 
     sender.sendBatch(batch)
