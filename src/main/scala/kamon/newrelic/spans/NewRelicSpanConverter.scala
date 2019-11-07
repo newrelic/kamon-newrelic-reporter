@@ -1,16 +1,9 @@
-/*
- *
- *  * Copyright 2019 New Relic Corporation. All rights reserved.
- *  * SPDX-License-Identifier: Apache-2.0
- *
- */
-
-package kamon.newrelic
+package kamon.newrelic.spans
 
 import com.newrelic.telemetry.Attributes
 import com.newrelic.telemetry.spans.{Span => NewRelicSpan}
+import kamon.newrelic.TagSetToAttributes
 import kamon.tag.Lookups.{longOption, option}
-import kamon.tag.{Tag, TagSet}
 import kamon.trace.Span
 import kamon.trace.Span.Mark
 import kamon.util.Clock
@@ -28,7 +21,6 @@ object NewRelicSpanConverter {
    * @return New Relic Span
    */
   def convertSpan(kamonSpan: Span.Finished): NewRelicSpan = {
-    //    _logger.warn("NewRelicSpanReporter convertSpan: " + kamonSpan.toString)
     val durationMs = Math.floorDiv(Clock.nanosBetween(kamonSpan.from, kamonSpan.to), 1000000)
     val parentId = if (kamonSpan.parentId.isEmpty) null else kamonSpan.parentId.string
     NewRelicSpan.builder(kamonSpan.id.string)
@@ -60,21 +52,8 @@ object NewRelicSpanConverter {
       case Mark(instant, key) => attributes.put(key, Clock.toEpochMicros(instant) / 1000) // convert to milliseconds
     }
 
-    addTags(kamonSpan.tags, attributes)
-    addTags(kamonSpan.metricTags, attributes)
-    attributes
+    TagSetToAttributes.addTags( Seq(kamonSpan.tags, kamonSpan.metricTags), attributes)
   }
-
-  private def addTags(tags: TagSet, attributes: Attributes): Unit =
-    tags.iterator().foreach(pair => {
-      val value:Any = Tag.unwrapValue(pair)
-      // Maintain the type of the tag value consistent with NR Attribute types
-      value match {
-        case value: String => attributes.put(pair.key, value)
-        case value: Long => attributes.put(pair.key, value)
-        case value: Boolean => attributes.put(pair.key, value)
-      }
-    });
 
   private def getStringTag(span: Span.Finished, tagName: String): String =
     span.tags.get(option(tagName)).orElse(span.metricTags.get(option(tagName))).orNull

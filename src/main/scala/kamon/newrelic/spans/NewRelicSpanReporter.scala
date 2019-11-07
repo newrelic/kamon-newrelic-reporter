@@ -5,8 +5,7 @@
  *
  */
 
-package kamon.newrelic
-
+package kamon.newrelic.spans
 
 import com.newrelic.telemetry.Attributes
 import com.newrelic.telemetry.spans.SpanBatch
