@@ -13,12 +13,12 @@ import scala.jdk.CollectionConverters._
 class NewRelicMetricsReporter(sender: MetricBatchSender = NewRelicMetricsReporter.buildSender()) extends MetricReporter {
 
   private val logger = LoggerFactory.getLogger(classOf[NewRelicMetricsReporter])
-  private var commonAttributes = buildCommonAttributes()
+  private var commonAttributes = buildCommonAttributes(Kamon.config())
 
-  private def buildCommonAttributes() = {
+  private def buildCommonAttributes(config: Config) = {
     new Attributes()
       .put("instrumentation.source", "kamon-agent")
-      .put("service.name", Kamon.config().getConfig("kamon.environment").getString("service"))
+      .put("service.name", config.getConfig("kamon.environment").getString("service"))
   }
 
   override def reportPeriodSnapshot(snapshot: PeriodSnapshot) = {
@@ -39,7 +39,7 @@ class NewRelicMetricsReporter(sender: MetricBatchSender = NewRelicMetricsReporte
   override def stop(): Unit = {}
 
   override def reconfigure(newConfig: Config): Unit = {
-    commonAttributes = buildCommonAttributes()
+    commonAttributes = buildCommonAttributes(newConfig)
   }
 }
 
