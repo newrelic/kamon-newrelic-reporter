@@ -27,10 +27,13 @@ class NewRelicMetricsReporter(sender: MetricBatchSender = NewRelicMetricsReporte
     val periodEndTime = snapshot.to.toEpochMilli
 
     val counters = snapshot.counters.flatMap { counter =>
-      new CounterConverter().convert(periodStartTime, periodEndTime, counter)
+      CounterConverter.convert(periodStartTime, periodEndTime, counter)
+    }
+    val gauges = snapshot.gauges.flatMap { gauge =>
+      GaugeConverter.convert(periodEndTime, gauge)
     }
 
-    val metrics = Seq(counters).flatten.asJava
+    val metrics = Seq(counters, gauges).flatten.asJava
     val batch = new MetricBatch(metrics, commonAttributes)
 
     sender.sendBatch(batch)
