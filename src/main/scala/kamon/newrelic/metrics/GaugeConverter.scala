@@ -6,8 +6,8 @@ import kamon.newrelic.TagSetToAttributes.addTags
 import kamon.newrelic.metrics.ConversionSupport.buildAttributes
 import org.slf4j.LoggerFactory
 
-class GaugeConverter {
-  private val logger = LoggerFactory.getLogger(classOf[GaugeConverter])
+object GaugeConverter {
+  private val logger = LoggerFactory.getLogger(getClass)
 
   def convert(timestamp: Long, gauge: MetricSnapshot.Values[Double]): Seq[Metric] = {
     val attributes = buildAttributes(gauge)

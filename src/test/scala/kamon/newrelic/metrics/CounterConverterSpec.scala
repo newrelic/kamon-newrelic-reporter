@@ -21,7 +21,7 @@ class CounterConverterSpec extends WordSpec with Matchers {
 
       val expectedResult: Seq[NewRelicMetric] = Seq(expected1, expected2)
 
-      val result = new CounterConverter().convert(TestMetricHelper.start, TestMetricHelper.end, snapshot)
+      val result = CounterConverter.convert(TestMetricHelper.start, TestMetricHelper.end, snapshot)
       result shouldBe expectedResult
     }
   }

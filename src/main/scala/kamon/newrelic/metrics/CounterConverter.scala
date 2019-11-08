@@ -6,8 +6,8 @@ import kamon.newrelic.TagSetToAttributes.addTags
 import kamon.newrelic.metrics.ConversionSupport.buildAttributes
 import org.slf4j.LoggerFactory
 
-class CounterConverter {
-  private val logger = LoggerFactory.getLogger(classOf[CounterConverter])
+object CounterConverter {
+  private val logger = LoggerFactory.getLogger(getClass)
 
   def convert(start: Long, end: Long, counter: MetricSnapshot.Values[Long]): Seq[Metric] = {
     val attributes = buildAttributes(counter)
