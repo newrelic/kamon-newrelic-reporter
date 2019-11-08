@@ -3,12 +3,9 @@ package kamon.newrelic.metrics
 import com.newrelic.telemetry.Attributes
 import kamon.metric.MetricSnapshot.Values
 
-class ConversionSupport {
-}
-
 object ConversionSupport {
 
-  def buildAttributes(metric: Values[_]) = {
+  def buildAttributes(metric: Values[_]) : Attributes = {
     val dimensionName = metric.settings.unit.dimension.name
     val magnitudeName = metric.settings.unit.magnitude.name
     val scaleFactor = metric.settings.unit.magnitude.scaleFactor

@@ -3,9 +3,6 @@ package kamon.newrelic
 import com.newrelic.telemetry.Attributes
 import kamon.tag.{Tag, TagSet}
 
-class TagSetToAttributes {
-}
-
 object TagSetToAttributes {
   def addTags(tagSeq: Seq[TagSet], attributes: Attributes = new Attributes()): Attributes = {
     tagSeq.foreach { tagset: TagSet =>

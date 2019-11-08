@@ -6,9 +6,6 @@ import kamon.metric.MeasurementUnit.Dimension
 import kamon.metric.{Instrument, MeasurementUnit, Metric, MetricSnapshot}
 import kamon.tag.TagSet
 
-class TestMetricHelper {
-}
-
 object TestMetricHelper {
   val end: Long = System.currentTimeMillis()
   val endInstant: Instant = Instant.ofEpochMilli(end)
