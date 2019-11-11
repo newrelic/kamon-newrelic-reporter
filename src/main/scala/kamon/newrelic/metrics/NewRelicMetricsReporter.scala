@@ -32,8 +32,11 @@ class NewRelicMetricsReporter(sender: MetricBatchSender = NewRelicMetricsReporte
     val gauges = snapshot.gauges.flatMap { gauge =>
       GaugeConverter.convert(periodEndTime, gauge)
     }
+    val histogramMetrics = snapshot.histograms.flatMap { histogram =>
+      DistributionConverter.convert(periodStartTime, periodEndTime, histogram)
+    }
 
-    val metrics = Seq(counters, gauges).flatten.asJava
+    val metrics = Seq(counters, gauges, histogramMetrics).flatten.asJava
     val batch = new MetricBatch(metrics, commonAttributes)
 
     sender.sendBatch(batch)
