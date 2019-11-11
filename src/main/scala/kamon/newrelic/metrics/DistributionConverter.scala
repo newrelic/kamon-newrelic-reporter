@@ -45,7 +45,7 @@ object DistributionConverter {
     kamonPercentiles.map { percentile =>
       val attributes: Attributes = instrumentBaseAttributes.copy()
         .put("percentile.countAtRank", percentile.countAtRank)
-        .put("percentile.rank", percentile.rank)
+        .put("percentile", percentile.rank)
       new Gauge(name + ".percentiles", percentile.value, end, attributes)
     }
   }
@@ -61,6 +61,7 @@ object DistributionConverter {
     val dimension: MeasurementUnit.Dimension = unit.dimension
 
     new Attributes()
+      .put("sourceMetricType", "histogram")
       .put("lowestDiscernibleValue", lowestDiscernibleValue)
       .put("highestTrackableValue", highestTrackableValue)
       .put("significantValueDigits", significantValueDigits)
