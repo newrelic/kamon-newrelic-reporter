@@ -7,7 +7,6 @@ import kamon.tag.Lookups.{longOption, option}
 import kamon.trace.Span
 import kamon.trace.Span.Mark
 import kamon.util.Clock
-import zipkin2.Endpoint
 
 /**
  * Converts a Kamon span to a New Relic span
@@ -37,12 +36,11 @@ object NewRelicSpanConverter {
     val attributes = new Attributes().put("span.kind", kamonSpan.kind.toString)
 
     // Span is a client span
-    if (kamonSpan.kind.toString == Span.Kind.Client.toString()) {
-      val remoteEndpoint = Endpoint.newBuilder()
-        .ip(getStringTag(kamonSpan, PeerKeys.IPv4))
-        .ip(getStringTag(kamonSpan, PeerKeys.IPv6))
-        .port(getLongTag(kamonSpan, PeerKeys.Port).toInt)
-        .build()
+    if (kamonSpan.kind == Span.Kind.Client) {
+      val remoteEndpoint = Endpoint(
+        getStringTag(kamonSpan, PeerKeys.IPv4),
+        getStringTag(kamonSpan, PeerKeys.IPv6),
+        getLongTag(kamonSpan, PeerKeys.Port).toInt)
 
       if (hasAnyData(remoteEndpoint))
         attributes.put("remoteEndpoint", remoteEndpoint.toString)
@@ -63,14 +61,17 @@ object NewRelicSpanConverter {
 
 
   private def hasAnyData(endpoint: Endpoint): Boolean =
-    endpoint.ipv4() != null || endpoint.ipv6() != null || endpoint.port() != null || endpoint.serviceName() != null
-
+    endpoint.ipv4 != null || endpoint.ipv6 != null || endpoint.port != null
 
   private object PeerKeys {
     val Host = "peer.host"
     val Port = "peer.port"
     val IPv4 = "peer.ipv4"
     val IPv6 = "peer.ipv6"
+  }
+
+  case class Endpoint(ipv4: String, ipv6: String, port: Integer) {
+    override def toString: String = s"Endpoint{ipv4=${ipv4}, ipv6=${ipv6}, port=${port}}"
   }
 
 }
