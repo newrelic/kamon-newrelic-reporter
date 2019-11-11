@@ -78,18 +78,18 @@ object TestMetricHelper {
 
   case class Distro(min: Long, max: Long, sum: Long, count: Long)
 
-  private def buildHistogramDist(perc: Percentage, bucket: Bucket, disty: Distro) = {
+  private def buildHistogramDist(perc: Percentage, bucket: Bucket, distro: Distro) = {
 
     val distribution: Distribution = new Distribution() {
       override def dynamicRange: DynamicRange = DynamicRange.Default
 
-      override def min: Long = disty.min
+      override def min: Long = distro.min
 
-      override def max: Long = disty.max
+      override def max: Long = distro.max
 
-      override def sum: Long = disty.sum
+      override def sum: Long = distro.sum
 
-      override def count: Long = disty.count
+      override def count: Long = distro.count
 
       override def percentile(rank: Double): Distribution.Percentile = null
 
