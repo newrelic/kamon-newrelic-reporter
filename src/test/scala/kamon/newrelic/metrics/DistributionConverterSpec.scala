@@ -9,7 +9,7 @@ class DistributionConverterSpec extends WordSpec with Matchers {
 
   "distribution converter" should {
     "convert a distribution" in {
-      val distributions: Distributions = TestMetricHelper.buildDistribution
+      val distributions: Distributions = TestMetricHelper.buildHistogramDistribution
       val summaryAttributes = new Attributes()
         .put("magnitude.name", "eimer")
         .put("magnitude.scaleFactor", 603.3d)
