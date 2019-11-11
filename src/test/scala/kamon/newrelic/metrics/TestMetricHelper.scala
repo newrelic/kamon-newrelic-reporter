@@ -38,7 +38,7 @@ object TestMetricHelper {
     val dynamicRange: DynamicRange = DynamicRange.Default
     val settings = Metric.Settings.ForDistributionInstrument(
       new MeasurementUnit(Dimension.Information, new metric.MeasurementUnit.Magnitude("eimer", 603.3d)), Duration.ofMillis(12), dynamicRange)
-    val distribution: Distribution = buildHistogramDist(Perc(19d, 2L, 816L), Bucket(717L, 881L), Disty(13L, 17L, 101L, 44L))
+    val distribution: Distribution = buildHistogramDist(Percentage(19d, 2L, 816L), Bucket(717L, 881L), Distro(13L, 17L, 101L, 44L))
     val inst: Snapshot[Distribution] = new Snapshot[Distribution](tagSet, distribution)
     new metric.MetricSnapshot.Distributions("trev", "a good trevor", settings, Seq(inst))
   }
@@ -48,13 +48,13 @@ object TestMetricHelper {
     val dynamicRange: DynamicRange = DynamicRange.Default
     val settings = Metric.Settings.ForDistributionInstrument(
       new MeasurementUnit(Dimension.Information, new metric.MeasurementUnit.Magnitude("timer", 333.3d)), Duration.ofMillis(15), dynamicRange)
-    val distribution: Distribution = buildHistogramDist(Perc(38d, 4L, 1632L), Bucket(1424L, 1672L), Disty(26L, 34L, 202L, 88L))
+    val distribution: Distribution = buildHistogramDist(Percentage(38d, 4L, 1632L), Bucket(1424L, 1672L), Distro(26L, 34L, 202L, 88L))
     val inst: Snapshot[Distribution] = new Snapshot[Distribution](tagSet, distribution)
     new metric.MetricSnapshot.Distributions("timer", "a good timer", settings, Seq(inst))
   }
 
 
-  case class Perc(r: Double, v: Long, c: Long) {
+  case class Percentage(r: Double, v: Long, c: Long) {
     def toPercentile: Distribution.Percentile = {
       new Distribution.Percentile {
         override def rank: Double = r
@@ -76,9 +76,9 @@ object TestMetricHelper {
     }
   }
 
-  case class Disty(min: Long, max: Long, sum: Long, count: Long)
+  case class Distro(min: Long, max: Long, sum: Long, count: Long)
 
-  private def buildHistogramDist(perc: Perc, bucket: Bucket, disty: Disty) = {
+  private def buildHistogramDist(perc: Percentage, bucket: Bucket, disty: Distro) = {
 
     val distribution: Distribution = new Distribution() {
       override def dynamicRange: DynamicRange = DynamicRange.Default
