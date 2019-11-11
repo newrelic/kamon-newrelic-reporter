@@ -61,7 +61,7 @@ object NewRelicSpanConverter {
 
 
   private def hasAnyData(endpoint: Endpoint): Boolean =
-    endpoint.ipv4 != null || endpoint.ipv6 != null || endpoint.port != null
+    endpoint.ipv4 != null || endpoint.ipv6 != null || endpoint.port != 0
 
   private object PeerKeys {
     val Host = "peer.host"
