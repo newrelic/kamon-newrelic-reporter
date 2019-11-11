@@ -28,7 +28,7 @@ class NewRelicMetricsReporterSpec extends WordSpec with Matchers {
     .put("foo", "bar")
     .put("sourceMetricType", "gauge")
 
-  private val summaryAttributes = new Attributes()
+  private val histogramSummaryAttributes = new Attributes()
     .put("magnitude.name", "eimer")
     .put("magnitude.scaleFactor", 603.3d)
     .put("lowestDiscernibleValue", 1L)
@@ -38,20 +38,30 @@ class NewRelicMetricsReporterSpec extends WordSpec with Matchers {
     .put("dimension", "information")
     .put("sourceMetricType", "histogram")
 
+  private val timerSummaryAttributes = new Attributes()
+    .put("magnitude.name", "timer")
+    .put("magnitude.scaleFactor", 333.3)
+    .put("lowestDiscernibleValue", 1L)
+    .put("highestTrackableValue", 3600000000000L)
+    .put("significantValueDigits", 2)
+    .put("thirteen", "queen")
+    .put("dimension", "information")
+    .put("sourceMetricType", "timer")
+
   private val count1: Metric = new Count("flib", TestMetricHelper.value1, TestMetricHelper.start, TestMetricHelper.end, countAttributes)
   private val count2: Metric = new Count("flib", TestMetricHelper.value2, TestMetricHelper.start, TestMetricHelper.end, countAttributes)
 
   private val gauge: Metric = new Gauge("shirley", 15.6d, TestMetricHelper.end, gaugeAttributes)
 
   private val histogramGauge: Metric = new Gauge("trev.percentiles", 2.0, TestMetricHelper.end,
-    summaryAttributes.copy().put("percentile.countAtRank", 816L).put("percentile", 19.0d))
+    histogramSummaryAttributes.copy().put("percentile.countAtRank", 816L).put("percentile", 19.0d))
   private val histogramSummary: Metric = new Summary("trev.summary", 44, 101.0, 13.0, 17.0,
-    TestMetricHelper.start, TestMetricHelper.end, summaryAttributes)
+    TestMetricHelper.start, TestMetricHelper.end, histogramSummaryAttributes)
 
   private val timerGauge: Metric = new Gauge("timer.percentiles", 4.0, TestMetricHelper.end,
-    summaryAttributes.copy().put("percentile.countAtRank", 1632L).put("percentile", 37.0d))
-  private val timerSummary: Metric = new Summary("timer.summary", 44, 101.0, 13.0, 17.0,
-    TestMetricHelper.start, TestMetricHelper.end, summaryAttributes)
+    timerSummaryAttributes.copy().put("percentile.countAtRank", 1632L).put("percentile", 38.0d))
+  private val timerSummary: Metric = new Summary("timer.summary", 88, 202.0, 26.0, 34.0,
+    TestMetricHelper.start, TestMetricHelper.end, timerSummaryAttributes)
 
   "The metrics reporter" should {
     "send some metrics" in {

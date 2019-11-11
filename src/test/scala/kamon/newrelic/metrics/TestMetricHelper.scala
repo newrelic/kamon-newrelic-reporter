@@ -38,7 +38,7 @@ object TestMetricHelper {
     val dynamicRange: DynamicRange = DynamicRange.Default
     val settings = Metric.Settings.ForDistributionInstrument(
       new MeasurementUnit(Dimension.Information, new metric.MeasurementUnit.Magnitude("eimer", 603.3d)), Duration.ofMillis(12), dynamicRange)
-    val distribution: Distribution = buildHistogramDist(Perc(19, 2, 816), Bucket(717, 881))
+    val distribution: Distribution = buildHistogramDist(Perc(19d, 2L, 816L), Bucket(717L, 881L), Disty(13L, 17L, 101L, 44L))
     val inst: Snapshot[Distribution] = new Snapshot[Distribution](tagSet, distribution)
     new metric.MetricSnapshot.Distributions("trev", "a good trevor", settings, Seq(inst))
   }
@@ -48,7 +48,7 @@ object TestMetricHelper {
     val dynamicRange: DynamicRange = DynamicRange.Default
     val settings = Metric.Settings.ForDistributionInstrument(
       new MeasurementUnit(Dimension.Information, new metric.MeasurementUnit.Magnitude("timer", 333.3d)), Duration.ofMillis(15), dynamicRange)
-    val distribution: Distribution = buildHistogramDist(Perc(37, 4, 1632), Bucket(1424, 1672))
+    val distribution: Distribution = buildHistogramDist(Perc(38d, 4L, 1632L), Bucket(1424L, 1672L), Disty(26L, 34L, 202L, 88L))
     val inst: Snapshot[Distribution] = new Snapshot[Distribution](tagSet, distribution)
     new metric.MetricSnapshot.Distributions("timer", "a good timer", settings, Seq(inst))
   }
@@ -76,18 +76,20 @@ object TestMetricHelper {
     }
   }
 
-  private def buildHistogramDist(perc: Perc, bucket: Bucket) = {
+  case class Disty(min: Long, max: Long, sum: Long, count: Long)
+
+  private def buildHistogramDist(perc: Perc, bucket: Bucket, disty: Disty) = {
 
     val distribution: Distribution = new Distribution() {
       override def dynamicRange: DynamicRange = DynamicRange.Default
 
-      override def min: Long = 13
+      override def min: Long = disty.min
 
-      override def max: Long = 17
+      override def max: Long = disty.max
 
-      override def sum: Long = 101
+      override def sum: Long = disty.sum
 
-      override def count: Long = 44
+      override def count: Long = disty.count
 
       override def percentile(rank: Double): Distribution.Percentile = null
 
