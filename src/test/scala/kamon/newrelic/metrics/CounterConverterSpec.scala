@@ -15,6 +15,7 @@ class CounterConverterSpec extends WordSpec with Matchers {
         .put("magnitudeName", "percentage")
         .put("scaleFactor", 1.0)
         .put("foo", "bar")
+        .put("sourceMetricType", "counter")
 
       val expected1: NewRelicMetric = new Count("flib", TestMetricHelper.value1, TestMetricHelper.start, TestMetricHelper.end, expectedAttrs);
       val expected2: NewRelicMetric = new Count("flib", TestMetricHelper.value2, TestMetricHelper.start, TestMetricHelper.end, expectedAttrs);

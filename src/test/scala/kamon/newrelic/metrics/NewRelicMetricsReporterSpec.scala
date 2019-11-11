@@ -18,6 +18,7 @@ class NewRelicMetricsReporterSpec extends WordSpec with Matchers {
     .put("magnitudeName", "percentage")
     .put("scaleFactor", 1.0d)
     .put("foo", "bar")
+    .put("sourceMetricType", "counter")
 
   private val gaugeAttributes = new Attributes()
     .put("description", "another one")
@@ -25,6 +26,7 @@ class NewRelicMetricsReporterSpec extends WordSpec with Matchers {
     .put("dimensionName", "information")
     .put("scaleFactor", 11.0)
     .put("foo", "bar")
+    .put("sourceMetricType", "gauge")
 
   private val summaryAttributes = new Attributes()
     .put("magnitude.name", "eimer")
@@ -34,12 +36,13 @@ class NewRelicMetricsReporterSpec extends WordSpec with Matchers {
     .put("significantValueDigits", 2)
     .put("twelve", "bishop")
     .put("dimension", "information")
+    .put("sourceMetricType", "histogram")
 
   private val count1: Metric = new Count("flib", TestMetricHelper.value1, TestMetricHelper.start, TestMetricHelper.end, countAttributes)
   private val count2: Metric = new Count("flib", TestMetricHelper.value2, TestMetricHelper.start, TestMetricHelper.end, countAttributes)
   private val gauge1: Metric = new Gauge("shirley", 15.6d, TestMetricHelper.end, gaugeAttributes)
   private val gauge2: Metric = new Gauge("trev.percentiles", 2.0, TestMetricHelper.end,
-    summaryAttributes.copy().put("percentile.countAtRank", 816L).put("percentile.rank", 19.0d))
+    summaryAttributes.copy().put("percentile.countAtRank", 816L).put("percentile", 19.0d))
   private val summary1: Metric = new Summary("trev.summary", 44, 101.0, 13.0, 17.0,
     TestMetricHelper.start, TestMetricHelper.end, summaryAttributes)
 
