@@ -84,7 +84,7 @@ class NewRelicMetricsReporterSpec extends WordSpec with Matchers {
 
       val sender = mock(classOf[MetricBatchSender])
 
-      val reporter = new NewRelicMetricsReporter(sender)
+      val reporter = new NewRelicMetricsReporter(() => sender)
       reporter.reportPeriodSnapshot(periodSnapshot)
 
       verify(sender).sendBatch(expectedBatch)
@@ -106,7 +106,7 @@ class NewRelicMetricsReporterSpec extends WordSpec with Matchers {
       val config: Config = Kamon.config().withValue("kamon.environment", configObject)
 
       val sender = mock(classOf[MetricBatchSender])
-      val reporter = new NewRelicMetricsReporter(sender)
+      val reporter = new NewRelicMetricsReporter(() => sender)
 
       reporter.reconfigure(config)
       reporter.reportPeriodSnapshot(periodSnapshot)
