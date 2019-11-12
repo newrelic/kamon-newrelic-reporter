@@ -38,7 +38,7 @@ class NewRelicSpanConverterSpec extends WordSpec with Matchers {
       val expectedAttributes = new Attributes()
         .put("span.kind", Span.Kind.Client.toString())
         .put("xx", TestSpanHelper.now)
-        .put("remoteEndpoint", "Endpoint{serviceName=null, ipv4=10.2.3.1, ipv6=fe80::6846:cfaf:e3f5:bea, port=9021}")
+        .put("remoteEndpoint", "Endpoint{ipv4=10.2.3.1, ipv6=fe80::6846:cfaf:e3f5:bea, port=9021}")
         .put("peer.host", "wonder.wall")
         .put("peer.ipv4", "10.2.3.1")
         .put("peer.ipv6", "fe80::6846:cfaf:e3f5:bea")

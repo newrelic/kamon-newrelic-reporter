@@ -26,8 +26,6 @@ credentials += Credentials(
 
 libraryDependencies ++= Seq(
   "io.kamon" %% "kamon-core" % "2.0.1",
-  "io.zipkin.reporter2" % "zipkin-reporter" % "2.10.3",
-  "io.zipkin.reporter2" % "zipkin-sender-okhttp3" % "2.10.3",
   "com.newrelic.telemetry" % "telemetry" % "0.3.2",
   "com.newrelic.telemetry" % "telemetry-http-okhttp" % "0.3.2",
   scalatest % "test",
