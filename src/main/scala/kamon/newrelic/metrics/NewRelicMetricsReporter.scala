@@ -15,10 +15,11 @@ import org.slf4j.LoggerFactory
 
 import scala.jdk.CollectionConverters._
 
-class NewRelicMetricsReporter(sender: MetricBatchSender = NewRelicMetricsReporter.buildSender()) extends MetricReporter {
+class NewRelicMetricsReporter(senderBuilder: () => MetricBatchSender = () => NewRelicMetricsReporter.buildSender()) extends MetricReporter {
 
   private val logger = LoggerFactory.getLogger(classOf[NewRelicMetricsReporter])
   private var commonAttributes = buildCommonAttributes(Kamon.config())
+  private var sender: MetricBatchSender = senderBuilder()
 
   private def buildCommonAttributes(config: Config) = {
     new Attributes()
@@ -54,6 +55,7 @@ class NewRelicMetricsReporter(sender: MetricBatchSender = NewRelicMetricsReporte
 
   override def reconfigure(newConfig: Config): Unit = {
     commonAttributes = buildCommonAttributes(newConfig)
+    sender = senderBuilder()
   }
 }
 
