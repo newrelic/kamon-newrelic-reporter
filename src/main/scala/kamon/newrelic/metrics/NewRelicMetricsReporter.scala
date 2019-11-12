@@ -18,8 +18,8 @@ import scala.jdk.CollectionConverters._
 class NewRelicMetricsReporter(senderBuilder: () => MetricBatchSender = () => NewRelicMetricsReporter.buildSender()) extends MetricReporter {
 
   private val logger = LoggerFactory.getLogger(classOf[NewRelicMetricsReporter])
-  private var commonAttributes = buildCommonAttributes(Kamon.config())
-  private var sender: MetricBatchSender = senderBuilder()
+  @volatile private var commonAttributes = buildCommonAttributes(Kamon.config())
+  @volatile private var sender: MetricBatchSender = senderBuilder()
 
   private def buildCommonAttributes(config: Config) = {
     new Attributes()
