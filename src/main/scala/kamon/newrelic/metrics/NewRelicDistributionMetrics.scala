@@ -14,10 +14,10 @@ import kamon.newrelic.TagSetToAttributes
 import kamon.tag.TagSet
 import org.slf4j.LoggerFactory
 
-object DistributionConverter {
+object NewRelicDistributionMetrics {
   private val logger = LoggerFactory.getLogger(getClass)
 
-  def convert(start: Long, end: Long, dist: MetricSnapshot.Distributions, sourceMetricType: String): Seq[Metric] = {
+  def apply(start: Long, end: Long, dist: MetricSnapshot.Distributions, sourceMetricType: String): Seq[Metric] = {
     logger.debug("name: {} ; numberOfInstruments: {}", dist.name, dist.instruments.size)
 
     val baseAttributes = buildBaseAttributes(dist, sourceMetricType)

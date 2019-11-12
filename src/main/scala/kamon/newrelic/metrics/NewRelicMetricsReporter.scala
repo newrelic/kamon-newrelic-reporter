@@ -32,16 +32,16 @@ class NewRelicMetricsReporter(sender: MetricBatchSender = NewRelicMetricsReporte
     val periodEndTime = snapshot.to.toEpochMilli
 
     val counters = snapshot.counters.flatMap { counter =>
-      CounterConverter.convert(periodStartTime, periodEndTime, counter)
+      NewRelicCounters(periodStartTime, periodEndTime, counter)
     }
     val gauges = snapshot.gauges.flatMap { gauge =>
-      GaugeConverter.convert(periodEndTime, gauge)
+      NewRelicGauges(periodEndTime, gauge)
     }
     val histogramMetrics = snapshot.histograms.flatMap { histogram =>
-      DistributionConverter.convert(periodStartTime, periodEndTime, histogram, "histogram")
+      NewRelicDistributionMetrics(periodStartTime, periodEndTime, histogram, "histogram")
     }
     val timerMetrics = snapshot.timers.flatMap { timer =>
-      DistributionConverter.convert(periodStartTime, periodEndTime, timer, "timer")
+      NewRelicDistributionMetrics(periodStartTime, periodEndTime, timer, "timer")
     }
 
     val metrics = Seq(counters, gauges, histogramMetrics, timerMetrics).flatten.asJava
