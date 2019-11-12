@@ -15,6 +15,7 @@ import kamon.tag.TagSet
 import org.slf4j.LoggerFactory
 
 object NewRelicDistributionMetrics {
+  private val percentilesToReport = Seq(50d, 75d, 90d, 95d, 99d, 99.9d)
   private val logger = LoggerFactory.getLogger(getClass)
 
   def apply(start: Long, end: Long, dist: MetricSnapshot.Distributions, sourceMetricType: String): Seq[Metric] = {
@@ -46,8 +47,8 @@ object NewRelicDistributionMetrics {
   }
 
   private def makePercentiles(name: String, end: Long, distValue: Distribution, instrumentBaseAttributes: Attributes): Seq[Metric] = {
-    val kamonPercentiles: Seq[Distribution.Percentile] = distValue.percentiles
-    kamonPercentiles.map { percentile =>
+    val kamonPercentiles: Seq[Distribution.Percentile] = percentilesToReport.map(rank => distValue.percentile(rank))
+    kamonPercentiles.filter(percentileValue => percentileValue != null).map { percentile =>
       val attributes: Attributes = instrumentBaseAttributes.copy()
         .put("percentile.countAtRank", percentile.countAtRank)
         .put("percentile", percentile.rank)
