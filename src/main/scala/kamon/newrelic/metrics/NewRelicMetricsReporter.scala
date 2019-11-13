@@ -11,6 +11,7 @@ import com.typesafe.config.Config
 import kamon.Kamon
 import kamon.metric.PeriodSnapshot
 import kamon.module.{MetricReporter, Module, ModuleFactory}
+import kamon.newrelic.TagsToAttributes
 import org.slf4j.LoggerFactory
 
 import scala.jdk.CollectionConverters._
@@ -22,9 +23,18 @@ class NewRelicMetricsReporter(senderBuilder: () => MetricBatchSender = () => New
   @volatile private var sender: MetricBatchSender = senderBuilder()
 
   private def buildCommonAttributes(config: Config) = {
-    new Attributes()
+    val environment = config.getConfig("kamon.environment")
+    val serviceName = if (environment.hasPath("service")) environment.getString("service") else null
+    val host = if (environment.hasPath("host")) environment.getString("host") else null
+    val attributes = new Attributes()
       .put("instrumentation.source", "kamon-agent")
-      .put("service.name", config.getConfig("kamon.environment").getString("service"))
+      .put("service.name", serviceName)
+      .put("host", host)
+    if (environment.hasPath("tags")) {
+      val environmentTags = environment.getConfig("tags")
+      TagsToAttributes.addTagsFromConfig(environmentTags, attributes)
+    }
+    attributes
   }
 
   override def reportPeriodSnapshot(snapshot: PeriodSnapshot) = {

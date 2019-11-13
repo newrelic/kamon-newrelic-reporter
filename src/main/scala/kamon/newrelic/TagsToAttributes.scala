@@ -6,10 +6,11 @@
 package kamon.newrelic
 
 import com.newrelic.telemetry.Attributes
+import com.typesafe.config.{Config, ConfigValue}
 import kamon.tag.{Tag, TagSet}
 
-object TagSetToAttributes {
-  def addTags(tagSeq: Seq[TagSet], attributes: Attributes = new Attributes()): Attributes = {
+object TagsToAttributes {
+  def addTagsFromTagSets(tagSeq: Seq[TagSet], attributes: Attributes = new Attributes()): Attributes = {
     tagSeq.foreach { tagset: TagSet =>
       tagset.iterator().foreach(pair => {
         val value: Any = Tag.unwrapValue(pair)
@@ -21,6 +22,19 @@ object TagSetToAttributes {
         }
       })
     }
+    attributes
+  }
+
+  def addTagsFromConfig(config: Config, attributes: Attributes = new Attributes()): Attributes = {
+    config.entrySet().forEach(entry => {
+      val key: String = entry.getKey
+      val v = entry.getValue.unwrapped()
+      v match {
+        case v: String => attributes.put(key, v)
+        case v: Number => attributes.put(key, v)
+        case v: java.lang.Boolean => attributes.put(key, v)
+      }
+    })
     attributes
   }
 }
