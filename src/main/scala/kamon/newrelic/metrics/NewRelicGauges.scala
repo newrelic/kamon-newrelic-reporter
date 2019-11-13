@@ -7,7 +7,7 @@ package kamon.newrelic.metrics
 
 import com.newrelic.telemetry.metrics.{Gauge, Metric}
 import kamon.metric.{Instrument, MetricSnapshot}
-import kamon.newrelic.TagsToAttributes.addTagsFromTagSets
+import kamon.newrelic.AttributeBuddy.addTagsFromTagSets
 import kamon.newrelic.metrics.ConversionSupport.buildAttributes
 import org.slf4j.LoggerFactory
 

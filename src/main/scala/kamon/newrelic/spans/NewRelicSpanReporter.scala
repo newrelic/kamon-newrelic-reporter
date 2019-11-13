@@ -5,12 +5,11 @@
 
 package kamon.newrelic.spans
 
-import com.newrelic.telemetry.Attributes
 import com.newrelic.telemetry.spans.SpanBatch
 import com.typesafe.config.Config
 import kamon.Kamon
 import kamon.module.{Module, ModuleFactory, SpanReporter}
-import kamon.newrelic.TagsToAttributes
+import kamon.newrelic.AttributeBuddy.buildCommonAttributes
 import kamon.trace.Span
 import org.slf4j.LoggerFactory
 
@@ -22,22 +21,6 @@ class NewRelicSpanReporter(spanBatchSenderBuilder: SpanBatchSenderBuilder =
   private val logger = LoggerFactory.getLogger(classOf[NewRelicSpanReporter])
   @volatile private var spanBatchSender = spanBatchSenderBuilder.build(Kamon.config())
   @volatile private var commonAttributes = buildCommonAttributes(Kamon.config())
-
-  private def buildCommonAttributes(config: Config) = {
-    val environment = config.getConfig("kamon.environment")
-    val serviceName = if (environment.hasPath("service")) environment.getString("service") else null
-    val host = if (environment.hasPath("host")) environment.getString("host") else null
-
-    val attributes = new Attributes()
-      .put("instrumentation.source", "kamon-agent")
-      .put("service.name", serviceName)
-      .put("host", host)
-    if (environment.hasPath("tags")) {
-      val environmentTags = environment.getConfig("tags")
-      TagsToAttributes.addTagsFromConfig(environmentTags, attributes)
-    }
-    attributes
-  }
 
   checkJoinParameter()
   logger.info("Started the New Relic Span reporter")

@@ -12,7 +12,7 @@ import org.scalatest.{Matchers, WordSpec}
 
 import scala.jdk.CollectionConverters._
 
-class TagsToAttributesSpec extends WordSpec with Matchers  {
+class AttributeBuddySpec extends WordSpec with Matchers  {
   "the tag set converter" should {
     "convert a tagset" in {
       val tags1 = TagSet.from(Map("foo" -> "bar", "boop" -> 1234L, "flower" -> false))
@@ -21,7 +21,7 @@ class TagsToAttributesSpec extends WordSpec with Matchers  {
         .put("boop", 1234L)
         .put("flower", false)
         .put("a", "b")
-      val result = TagsToAttributes.addTagsFromTagSets(Seq(tags1, tags2))
+      val result = AttributeBuddy.addTagsFromTagSets(Seq(tags1, tags2))
       result shouldBe expectedAttributes
     }
 
@@ -31,7 +31,7 @@ class TagsToAttributesSpec extends WordSpec with Matchers  {
         "numberTag" -> 234,
         "booleanTag" -> true,
         "complexType" -> Map("lemon" -> "danishes").asJava).asJava)
-      val result = TagsToAttributes.addTagsFromConfig(tagDetails.toConfig)
+      val result = AttributeBuddy.addTagsFromConfig(tagDetails.toConfig)
 
       val expected = new Attributes()
         .put("stringTag", "testThing")

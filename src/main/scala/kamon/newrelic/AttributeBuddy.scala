@@ -9,7 +9,7 @@ import com.newrelic.telemetry.Attributes
 import com.typesafe.config.{Config, ConfigValue}
 import kamon.tag.{Tag, TagSet}
 
-object TagsToAttributes {
+object AttributeBuddy {
   def addTagsFromTagSets(tagSeq: Seq[TagSet], attributes: Attributes = new Attributes()): Attributes = {
     tagSeq.foreach { tagset: TagSet =>
       tagset.iterator().foreach(pair => {
@@ -35,6 +35,21 @@ object TagsToAttributes {
         case v: java.lang.Boolean => attributes.put(key, v)
       }
     })
+    attributes
+  }
+
+  def buildCommonAttributes(config: Config) = {
+    val environment = config.getConfig("kamon.environment")
+    val serviceName = if (environment.hasPath("service")) environment.getString("service") else null
+    val host = if (environment.hasPath("host")) environment.getString("host") else null
+    val attributes = new Attributes()
+      .put("instrumentation.source", "kamon-agent")
+      .put("service.name", serviceName)
+      .put("host", host)
+    if (environment.hasPath("tags")) {
+      val environmentTags = environment.getConfig("tags")
+      AttributeBuddy.addTagsFromConfig(environmentTags, attributes)
+    }
     attributes
   }
 }
