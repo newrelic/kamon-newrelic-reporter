@@ -14,12 +14,7 @@ object AttributeBuddy {
     tagSeq.foreach { tagset: TagSet =>
       tagset.iterator().foreach(pair => {
         val value: Any = Tag.unwrapValue(pair)
-        // Maintain the type of the tag value consistent with NR Attribute types
-        value match {
-          case value: String => attributes.put(pair.key, value)
-          case value: Number => attributes.put(pair.key, value)
-          case value: Boolean => attributes.put(pair.key, value)
-        }
+        putTypedValue(attributes, pair.key, value)
       })
     }
     attributes
@@ -28,17 +23,22 @@ object AttributeBuddy {
   def addTagsFromConfig(config: Config, attributes: Attributes = new Attributes()): Attributes = {
     config.entrySet().forEach(entry => {
       val key: String = entry.getKey
-      val v = entry.getValue.unwrapped()
-      v match {
-        case v: String => attributes.put(key, v)
-        case v: Number => attributes.put(key, v)
-        case v: java.lang.Boolean => attributes.put(key, v)
-      }
+      val v : Any = entry.getValue.unwrapped()
+      putTypedValue(attributes, key, v)
     })
     attributes
   }
 
-  def buildCommonAttributes(config: Config) = {
+  private def putTypedValue(attributes: Attributes, key: String, value: Any) = {
+    // Maintain the type of the tag value consistent with NR Attribute types
+    value match {
+      case v: String => attributes.put(key, v)
+      case v: Number => attributes.put(key, v)
+      case v: Boolean => attributes.put(key, v)
+    }
+  }
+
+  def buildCommonAttributes(config: Config): Attributes = {
     val environment = config.getConfig("kamon.environment")
     val serviceName = if (environment.hasPath("service")) environment.getString("service") else null
     val host = if (environment.hasPath("host")) environment.getString("host") else null
