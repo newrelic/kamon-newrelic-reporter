@@ -43,7 +43,7 @@ Add the `kamon-newrelic` reporter dependency to the project `build.sbt`:
 ```
 libraryDependencies ++= Seq(
     "io.kamon" %% "kamon-bundle" % "2.0.2",
-    "com.newrelic.telemetry" %% "kamon-newrelic-reporter" % "0.0.2",
+    "com.newrelic.telemetry" %% "kamon-newrelic-reporter" % "0.0.3",
     ...
 )
 ```
