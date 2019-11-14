@@ -1,13 +1,13 @@
 /*
- * Copyright 2019 New Relic Corporation. All rights reserved.
- * SPDX-License-Identifier: Apache-2.0
+ *  Copyright 2019 New Relic Corporation. All rights reserved.
+ *  SPDX-License-Identifier: Apache-2.0
  */
 
 package kamon.newrelic.spans
 
 import com.newrelic.telemetry.Attributes
 import com.newrelic.telemetry.spans.{Span => NewRelicSpan}
-import kamon.newrelic.AttributeBuddy
+import kamon.newrelic.AttributeBuddy._
 import kamon.tag.Lookups.{longOption, option}
 import kamon.trace.Span
 import kamon.trace.Span.Mark
@@ -28,19 +28,21 @@ object NewRelicSpanConverter {
     val durationMs = Math.floorDiv(Clock.nanosBetween(kamonSpan.from, kamonSpan.to), 1000000)
     // If parent id is an empty string, just null it out so it doesn't get sent to NR
     val parentId = if (kamonSpan.parentId.isEmpty) null else kamonSpan.parentId.string
-    NewRelicSpan.builder(kamonSpan.id.string)
+    val builder = NewRelicSpan.builder(kamonSpan.id.string)
       .traceId(kamonSpan.trace.id.string)
       .parentId(parentId)
       .name(kamonSpan.operationName)
       .timestamp(Clock.toEpochMicros(kamonSpan.from) / 1000) // convert to milliseconds
       .durationMs(durationMs)
       .attributes(buildAttributes(kamonSpan))
-      .build()
+    if (kamonSpan.hasError) {
+      builder.withError()
+    }
+    builder.build()
   }
 
   private def buildAttributes(kamonSpan: Span.Finished) = {
     val attributes = new Attributes().put("span.kind", kamonSpan.kind.toString)
-
     // Span is a client span
     if (kamonSpan.kind == Span.Kind.Client) {
       val remoteEndpoint = Endpoint(
@@ -57,7 +59,7 @@ object NewRelicSpanConverter {
       case Mark(instant, key) => attributes.put(key, Clock.toEpochMicros(instant) / 1000) // convert to milliseconds
     }
 
-    AttributeBuddy.addTagsFromTagSets( Seq(kamonSpan.tags, kamonSpan.metricTags), attributes)
+    addTagsFromTagSets(Seq(kamonSpan.tags, kamonSpan.metricTags), attributes)
   }
 
   private def getStringTag(span: Span.Finished, tagName: String): String =
