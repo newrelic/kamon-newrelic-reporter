@@ -1,11 +1,9 @@
 /*
- * Copyright 2019 New Relic Corporation. All rights reserved.
+ * Copyright 2020 New Relic Corporation. All rights reserved.
  * SPDX-License-Identifier: Apache-2.0
  */
 
 package kamon.newrelic.metrics
-
-import java.util.Optional
 
 import com.newrelic.telemetry.SimpleMetricBatchSender
 import com.newrelic.telemetry.metrics.{MetricBatch, MetricBatchSender}
@@ -14,6 +12,7 @@ import kamon.Kamon
 import kamon.metric.PeriodSnapshot
 import kamon.module.{MetricReporter, Module, ModuleFactory}
 import kamon.newrelic.AttributeBuddy.buildCommonAttributes
+import kamon.newrelic.LibraryVersion
 import org.slf4j.LoggerFactory
 
 import scala.jdk.CollectionConverters._
@@ -58,10 +57,6 @@ class NewRelicMetricsReporter(senderBuilder: () => MetricBatchSender = () => New
 
 object NewRelicMetricsReporter {
 
-  private val implementationVersion =
-    Optional.ofNullable(classOf[NewRelicMetricsReporter].getPackage.getImplementationVersion)
-      .orElse("UnknownVersion");
-
   class Factory extends ModuleFactory {
     override def create(settings: ModuleFactory.Settings): Module =
       new NewRelicMetricsReporter()
@@ -73,7 +68,7 @@ object NewRelicMetricsReporter {
     val nrInsightsInsertKey = nrConfig.getString("nr-insights-insert-key")
     SimpleMetricBatchSender.builder(nrInsightsInsertKey)
       .enableAuditLogging()
-      .secondaryUserAgent("newrelic-kamon-reporter", implementationVersion)
+      .secondaryUserAgent("newrelic-kamon-reporter", LibraryVersion.version)
       .build()
   }
 }
