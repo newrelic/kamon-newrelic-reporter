@@ -19,9 +19,9 @@ import kamon.util.Clock
 object NewRelicSpanConverter {
 
   /**
-   * Converts a Kamon Span$Finished instance into a New Relic Span
+   * Converts a Kamon Span.Finished instance into a New Relic Span
    *
-   * @param kamonSpan Kamon Span$Finished
+   * @param kamonSpan Kamon Span.Finished
    * @return New Relic Span
    */
   def convertSpan(kamonSpan: Span.Finished): NewRelicSpan = {

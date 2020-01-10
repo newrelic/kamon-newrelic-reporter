@@ -6,10 +6,12 @@
 package kamon.newrelic.spans
 
 import java.time.Duration
+import java.util.Optional
 
 import com.newrelic.telemetry.SimpleSpanBatchSender
 import com.newrelic.telemetry.spans.SpanBatchSender
 import com.typesafe.config.Config
+import kamon.newrelic.metrics.NewRelicMetricsReporter
 import org.slf4j.LoggerFactory
 
 trait SpanBatchSenderBuilder {
@@ -19,6 +21,9 @@ trait SpanBatchSenderBuilder {
 class SimpleSpanBatchSenderBuilder() extends SpanBatchSenderBuilder {
 
   private val logger = LoggerFactory.getLogger(classOf[SpanBatchSenderBuilder])
+  private val implementationVersion =
+    Optional.ofNullable(classOf[SpanBatchSenderBuilder].getPackage.getImplementationVersion)
+      .orElse("UnknownVersion");
 
   /**
    * SpanBatchSender responsible for sending batches of Spans to New Relic using the Telemetry SDK
@@ -39,6 +44,7 @@ class SimpleSpanBatchSenderBuilder() extends SpanBatchSenderBuilder {
 
     SimpleSpanBatchSender.builder(nrInsightsInsertKey, Duration.ofSeconds(5))
       .enableAuditLogging()
+      .secondaryUserAgent("newrelic-kamon-reporter", implementationVersion)
       .build()
   }
 }

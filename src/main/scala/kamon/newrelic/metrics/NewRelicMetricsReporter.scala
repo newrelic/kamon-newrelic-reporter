@@ -5,6 +5,8 @@
 
 package kamon.newrelic.metrics
 
+import java.util.Optional
+
 import com.newrelic.telemetry.SimpleMetricBatchSender
 import com.newrelic.telemetry.metrics.{MetricBatch, MetricBatchSender}
 import com.typesafe.config.Config
@@ -56,6 +58,10 @@ class NewRelicMetricsReporter(senderBuilder: () => MetricBatchSender = () => New
 
 object NewRelicMetricsReporter {
 
+  private val implementationVersion =
+    Optional.ofNullable(classOf[NewRelicMetricsReporter].getPackage.getImplementationVersion)
+      .orElse("UnknownVersion");
+
   class Factory extends ModuleFactory {
     override def create(settings: ModuleFactory.Settings): Module =
       new NewRelicMetricsReporter()
@@ -67,6 +73,7 @@ object NewRelicMetricsReporter {
     val nrInsightsInsertKey = nrConfig.getString("nr-insights-insert-key")
     SimpleMetricBatchSender.builder(nrInsightsInsertKey)
       .enableAuditLogging()
+      .secondaryUserAgent("newrelic-kamon-reporter", implementationVersion)
       .build()
   }
 }
