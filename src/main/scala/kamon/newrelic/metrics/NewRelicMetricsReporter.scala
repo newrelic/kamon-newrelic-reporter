@@ -1,6 +1,6 @@
 /*
- * Copyright 2020 New Relic Corporation. All rights reserved.
- * SPDX-License-Identifier: Apache-2.0
+ *  Copyright 2020 New Relic Corporation. All rights reserved.
+ *  SPDX-License-Identifier: Apache-2.0
  */
 
 package kamon.newrelic.metrics
@@ -12,7 +12,7 @@ import kamon.Kamon
 import kamon.metric.PeriodSnapshot
 import kamon.module.{MetricReporter, Module, ModuleFactory}
 import kamon.newrelic.AttributeBuddy.buildCommonAttributes
-import kamon.newrelic.LibraryVersion
+import kamon.status.Environment
 import org.slf4j.LoggerFactory
 
 import scala.jdk.CollectionConverters._
@@ -20,11 +20,11 @@ import scala.jdk.CollectionConverters._
 class NewRelicMetricsReporter(senderBuilder: () => MetricBatchSender = () => NewRelicMetricsReporter.buildSender()) extends MetricReporter {
 
   private val logger = LoggerFactory.getLogger(classOf[NewRelicMetricsReporter])
-  @volatile private var commonAttributes = buildCommonAttributes(Kamon.config())
+  @volatile private var commonAttributes = buildCommonAttributes(Kamon.environment)
   @volatile private var sender: MetricBatchSender = senderBuilder()
 
-  override def reportPeriodSnapshot(snapshot: PeriodSnapshot) = {
-    logger.warn("NewRelicMetricReporter reportPeriodSnapshot...")
+  override def reportPeriodSnapshot(snapshot: PeriodSnapshot): Unit = {
+    logger.debug("NewRelicMetricReporter reportPeriodSnapshot...")
     val periodStartTime = snapshot.from.toEpochMilli
     val periodEndTime = snapshot.to.toEpochMilli
 
@@ -41,6 +41,8 @@ class NewRelicMetricsReporter(senderBuilder: () => MetricBatchSender = () => New
       NewRelicDistributionMetrics(periodStartTime, periodEndTime, timer, "timer")
     }
 
+    //todo: add range sampler metrics as well
+
     val metrics = Seq(counters, gauges, histogramMetrics, timerMetrics).flatten.asJava
     val batch = new MetricBatch(metrics, commonAttributes)
 
@@ -50,9 +52,15 @@ class NewRelicMetricsReporter(senderBuilder: () => MetricBatchSender = () => New
   override def stop(): Unit = {}
 
   override def reconfigure(newConfig: Config): Unit = {
-    commonAttributes = buildCommonAttributes(newConfig)
+    reconfigure(Kamon.environment)
+  }
+
+  //exposed for testing
+  def reconfigure(environment: Environment): Unit = {
+    commonAttributes = buildCommonAttributes(environment)
     sender = senderBuilder()
   }
+
 }
 
 object NewRelicMetricsReporter {
@@ -62,13 +70,11 @@ object NewRelicMetricsReporter {
       new NewRelicMetricsReporter()
   }
 
-  def buildSender(): MetricBatchSender = {
-    val config = Kamon.config();
+  def buildSender(config: Config = Kamon.config()): MetricBatchSender = {
     val nrConfig = config.getConfig("kamon.newrelic")
     val nrInsightsInsertKey = nrConfig.getString("nr-insights-insert-key")
     SimpleMetricBatchSender.builder(nrInsightsInsertKey)
       .enableAuditLogging()
-      .secondaryUserAgent("newrelic-kamon-reporter", LibraryVersion.version)
       .build()
   }
 }
