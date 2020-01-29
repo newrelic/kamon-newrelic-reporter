@@ -1,13 +1,17 @@
 /*
- * Copyright 2019 New Relic Corporation. All rights reserved.
- * SPDX-License-Identifier: Apache-2.0
+ *  Copyright 2020 New Relic Corporation. All rights reserved.
+ *  SPDX-License-Identifier: Apache-2.0
  */
 
 package kamon.newrelic
 
 import com.newrelic.telemetry.Attributes
 import com.typesafe.config.{Config, ConfigValue}
+import kamon.Kamon
+import kamon.status.Environment
 import kamon.tag.{Tag, TagSet}
+
+import scala.jdk.CollectionConverters._
 
 object AttributeBuddy {
   def addTagsFromTagSets(tagSeq: Seq[TagSet], attributes: Attributes = new Attributes()): Attributes = {
@@ -21,11 +25,11 @@ object AttributeBuddy {
   }
 
   def addTagsFromConfig(config: Config, attributes: Attributes = new Attributes()): Attributes = {
-    config.entrySet().forEach(entry => {
+    config.entrySet().asScala.foreach { entry =>
       val key: String = entry.getKey
-      val v : Any = entry.getValue.unwrapped()
+      val v: Any = entry.getValue.unwrapped()
       putTypedValue(attributes, key, v)
-    })
+    }
     attributes
   }
 
@@ -38,18 +42,12 @@ object AttributeBuddy {
     }
   }
 
-  def buildCommonAttributes(config: Config): Attributes = {
-    val environment = config.getConfig("kamon.environment")
-    val serviceName = if (environment.hasPath("service")) environment.getString("service") else null
-    val host = if (environment.hasPath("host")) environment.getString("host") else null
+  def buildCommonAttributes(environment: Environment): Attributes = {
     val attributes = new Attributes()
       .put("instrumentation.source", "kamon-agent")
-      .put("service.name", serviceName)
-      .put("host", host)
-    if (environment.hasPath("tags")) {
-      val environmentTags = environment.getConfig("tags")
-      AttributeBuddy.addTagsFromConfig(environmentTags, attributes)
-    }
+      .put("service.name", environment.service)
+      .put("host", environment.host)
+    AttributeBuddy.addTagsFromTagSets(Seq(environment.tags), attributes)
     attributes
   }
 }
