@@ -7,7 +7,6 @@ package kamon.newrelic
 
 import com.newrelic.telemetry.Attributes
 import com.typesafe.config.{Config, ConfigValue}
-import kamon.Kamon
 import kamon.status.Environment
 import kamon.tag.{Tag, TagSet}
 

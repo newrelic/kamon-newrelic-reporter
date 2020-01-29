@@ -50,9 +50,8 @@ object NewRelicDistributionMetrics {
     percentilesToReport
       .map(rank => distValue.percentile(rank))
       .filter(percentileValue => percentileValue != null)
-      .map { percentile =>
+      .map { percentile: Distribution.Percentile =>
         val attributes: Attributes = instrumentBaseAttributes.copy()
-          .put("percentile.countAtRank", percentile.countAtRank)
           .put("percentile", percentile.rank)
         new Gauge(name + ".percentiles", percentile.value, end, attributes)
       }
