@@ -75,7 +75,7 @@ Span data can be:
   {
     "common": {
       "attributes": {
-        "instrumentation.source": "kamon-agent",
+        "instrumentation.provider": "kamon-agent",
         "service.name": "Test Service A",
         "host": "host123.test.com"
       }
