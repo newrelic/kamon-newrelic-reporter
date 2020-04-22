@@ -1,3 +1,5 @@
+[![Archived header](https://github.com/newrelic/open-source-office/raw/master/examples/categories/images/Archived.png)](https://github.com/newrelic/open-source-office/blob/master/examples/categories/index.md#archived)
+
 # THIS VERSION OF THE REPORTER HAS BEEN DEPRECATED
 Please use the official reporter located here:  https://github.com/kamon-io/kamon-newrelic
 
