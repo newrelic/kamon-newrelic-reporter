@@ -1,7 +1,7 @@
 [![Archived header](https://github.com/newrelic/open-source-office/raw/master/examples/categories/images/Archived.png)](https://github.com/newrelic/open-source-office/blob/master/examples/categories/index.md#archived)
 
 # THIS VERSION OF THE REPORTER HAS BEEN DEPRECATED
-Please use the official reporter located here:  https://github.com/kamon-io/kamon-newrelic
+Please use the official reporter located here, as a part of the main kamon project:  https://github.com/kamon-io/kamon
 
 Note: New Relic still supports that official reporter; we have just moved it to the kamon-io organization to improve
 visibility for kamon users.
